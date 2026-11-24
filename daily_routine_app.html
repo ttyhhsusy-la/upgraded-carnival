@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f766e">
+<title>আমার ডেইলি রুটিন</title>
+<style>
+:root{--bg:#f4f8f7;--card:#fff;--ink:#16312e;--muted:#627875;--brand:#0f766e;--line:#dce8e5;--soft:#e6f4f1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}
+header{background:linear-gradient(135deg,#0f766e,#164e63);color:white;padding:25px 18px 30px;border-radius:0 0 24px 24px}
+.wrap{max-width:760px;margin:auto;padding:0 14px}h1{font-size:1.55rem;margin:0 0 7px}header p{margin:0;color:#d9f5ef}.today{margin-top:18px;font-size:.95rem;opacity:.95}
+main{padding:18px 0 38px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}.stat,.panel,.task{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}.stat strong{font-size:1.35rem;display:block}.stat span{color:var(--muted);font-size:.88rem}
+.progress{height:9px;background:#e1ece9;border-radius:99px;overflow:hidden;margin-top:10px}.progress div{height:100%;width:0;background:var(--brand);transition:width .2s}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.btn{border:0;border-radius:12px;padding:11px 14px;font:inherit;font-weight:650;cursor:pointer;background:var(--brand);color:white}.btn.secondary{background:#e3efec;color:var(--ink)}.btn.small{padding:7px 10px;font-size:.9rem}
+h2{font-size:1.1rem;margin:20px 0 10px}.task{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:start;margin-bottom:9px}.task.done{opacity:.62}.task.done .taskname{text-decoration:line-through}.check{width:22px;height:22px;accent-color:var(--brand);margin-top:3px}.taskname{font-weight:700}.meta{font-size:.86rem;color:var(--muted);margin-top:3px}.tasktime{font-size:.85rem;font-weight:700;color:var(--brand);white-space:nowrap}.tag{display:inline-block;background:var(--soft);color:var(--brand);font-size:.75rem;padding:3px 7px;border-radius:99px;margin-top:6px}
+details{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:12px 0;padding:14px}summary{font-weight:750;cursor:pointer}label{display:block;font-size:.9rem;color:var(--muted);margin:10px 0 5px}input,select{font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;width:100%;background:white;color:var(--ink)}.editrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.edititem{border-bottom:1px solid var(--line);padding:10px 0}.edititem:last-child{border:0}.edititem strong{font-size:.95rem}.note{color:var(--muted);font-size:.86rem;line-height:1.5}.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#16312e;color:white;padding:12px 16px;border-radius:12px;max-width:90%;display:none;box-shadow:0 5px 20px #0002}.foot{font-size:.82rem;color:var(--muted);text-align:center;margin-top:20px}
+@media(min-width:620px){.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>🌿 আমার ডেইলি রুটিন</h1>
+<p>ছোট ছোট ভালো অভ্যাস, প্রতিদিন একটু এগিয়ে যাওয়া</p>
+<div class="today" id="today"></div>
+</div></header>
+<main class="wrap">
+<div class="stats">
+ <div class="stat"><strong id="count">0/0</strong><span>আজকের কাজ সম্পন্ন</span><div class="progress"><div id="bar"></div></div></div>
+ <div class="stat"><strong id="percent">0%</strong><span>আজকের অগ্রগতি</span></div>
+ <div class="stat"><strong id="next">—</strong><span>পরবর্তী কাজ</span></div>
+</div>
+<div class="actions">
+<button class="btn" id="notify">🔔 রিমাইন্ডার চালু</button>
+<button class="btn secondary" id="reset">আজকের টিক রিসেট</button>
+</div>
+<p class="note">রিমাইন্ডার এই পেজ খোলা থাকলে কাজ করবে। ফোনের ব্রাউজার নোটিফিকেশনের অনুমতি চাইতে পারে। ফজর ও অন্য নামাজের সময় নিজের এলাকার আজান অনুযায়ী সেট করে নাও।</p>
+<h2>আজকের রুটিন</h2>
+<div id="tasks"></div>
+<details>
+<summary>⚙️ রুটিনের সময় ও কাজ বদলাও</summary>
+<p class="note">সময় বদলালে সেটিংস ফোনে সেভ থাকবে। কাজের নামও নিজের মতো করে লিখতে পারো।</p>
+<div id="editor"></div>
+<div class="actions"><button class="btn" id="save">পরিবর্তন সেভ করো</button><button class="btn secondary" id="defaults">ডিফল্ট রুটিন</button></div>
+</details>
+<details>
+<summary>🥗 খাবার ও সুস্থ অভ্যাসের পরামর্শ</summary>
+<ul>
+<li>সকালে ডিম/ডাল/দুধ বা দইয়ের সঙ্গে রুটি/ওটস/চিঁড়া এবং ফলের মতো খাবার বেছে নাও।</li>
+<li>দুপুরে ভাত বা রুটি, ডাল, সবজি এবং মাছ/ডিম/মুরগির মতো প্রোটিন রাখো।</li>
+<li>রাতে ঘরের স্বাভাবিক খাবার খাও; না খেয়ে থাকা বা খুব কড়া ডায়েট করার দরকার নেই।</li>
+<li>পানি পান করো, আর শরীরের সামর্থ্য অনুযায়ী হাঁটা বা হালকা ব্যায়াম করো। ব্যথা বা অসুস্থতা হলে থামবে।</li>
+<li>নিয়মিত ঘুম, পড়াশোনার মাঝে বিরতি এবং ফোন দূরে রেখে পড়া—এসবই রুটিনের অংশ।</li>
+</ul>
+<p class="note">এটি সাধারণ সুস্থ অভ্যাসের পরিকল্পনা, চিকিৎসা বা ব্যক্তিগত ওজন-হ্রাসের পরামর্শ নয়। কিশোর-কিশোরীদের শরীর এখনও বেড়ে ওঠে—কঠোর ডায়েট বা দ্রুত ওজন কমানোর লক্ষ্য ঠিক নয়।</p>
+</details>
+<p class="foot">তোমার সময়সূচি তোমার জীবন অনুযায়ী বদলানো যাবে 💚</p>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const defaults=[
+["ফজর","05:00","ফজরের নামাজ ও অল্প সময় শান্তভাবে শুরু","নামাজ"],
+["সতেজ হওয়া","05:20","মুখ ধোয়া, পানি পান, হালকা স্ট্রেচিং","নিজের যত্ন"],
+["সকালের নাস্তা","06:00","পেট ভরে সুষম নাস্তা; যেমন রুটি/চিঁড়া, ডিম/দুধ ও ফল","খাবার"],
+["কলেজের প্রস্তুতি","07:15","ব্যাগ, পানি ও দরকারি জিনিস গুছিয়ে নাও","প্রস্তুতি"],
+["কলেজে যাওয়া","08:00","ক্লাসে মনোযোগ; বিরতিতে পানি ও প্রয়োজন হলে হালকা নাস্তা","কলেজ"],
+["কলেজ ছুটি","12:30","বাড়ি ফেরা/যাতায়াতের সময়","কলেজ"],
+["দুপুরের খাবার","13:15","ভাত/রুটি, ডাল, সবজি ও মাছ/ডিম/মুরগি","খাবার"],
+["যোহর","13:45","যোহরের নামাজ; স্থানীয় সময় অনুযায়ী বদলাও","নামাজ"],
+["বিশ্রাম","14:00","২০–৩০ মিনিট আরাম; ঘুম পেলে অল্প বিশ্রাম","বিশ্রাম"],
+["পড়াশোনা ১","14:30","একটি বিষয় নিয়ে মনোযোগ দিয়ে পড়ো","পড়াশোনা"],
+["আসর","16:00","আসরের নামাজ; স্থানীয় সময় অনুযায়ী বদলাও","নামাজ"],
+["হাঁটা/খেলাধুলা","16:20","স্বচ্ছন্দ গতিতে হাঁটা বা পছন্দের খেলাধুলা","নড়াচড়া"],
+["ফোন-বিরতি","17:00","ফোন অন্য ঘরে রেখে ২৫ মিনিট পড়া/কাজ","ডিজিটাল অভ্যাস"],
+["মাগরিব","18:00","মাগরিবের নামাজ; স্থানীয় সময় অনুযায়ী বদলাও","নামাজ"],
+["পড়াশোনা ২","18:20","হোমওয়ার্ক ও পরের দিনের প্রস্তুতি","পড়াশোনা"],
+["রাতের খাবার","20:00","পরিবারের সঙ্গে সুষম রাতের খাবার","খাবার"],
+["এশা","20:30","এশার নামাজ; স্থানীয় সময় অনুযায়ী বদলাও","নামাজ"],
+["হালকা রিভিশন","20:50","দিনের পড়া ২০–৩০ মিনিট ঝালিয়ে নাও","পড়াশোনা"],
+["ঘুমের প্রস্তুতি","21:30","স্ক্রিন কমাও, ব্যাগ/কাপড় গুছিয়ে নাও","ঘুম"],
+["ঘুম","22:00","পর্যাপ্ত ঘুমের জন্য বিছানায় যাও","ঘুম"]
+];
+let items=load();
+function load(){try{let x=JSON.parse(localStorage.getItem("routine-items"));if(Array.isArray(x)&&x.length)return x}catch(e){}return defaults.map((a,i)=>({id:i,name:a[0],time:a[1],desc:a[2],tag:a[3]}))}
+function dayKey(){let d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+function completed(){try{return JSON.parse(localStorage.getItem("routine-done-"+dayKey())||"{}")}catch(e){return {}}}
+let done=completed();
+function persist(){localStorage.setItem("routine-items",JSON.stringify(items));localStorage.setItem("routine-done-"+dayKey(),JSON.stringify(done))}
+function timeM(t){let [h,m]=t.split(":").map(Number);return h*60+m}
+function bn(n){return String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d])}
+function clock(){let d=new Date();return d.toLocaleDateString("bn-BD",{weekday:"long",year:"numeric",month:"long",day:"numeric"})+" • "+d.toLocaleTimeString("bn-BD",{hour:"2-digit",minute:"2-digit"})}
+function render(){
+ document.getElementById("today").textContent=clock();
+ const list=document.getElementById("tasks");list.innerHTML="";
+ items.forEach((it,i)=>{let el=document.createElement("div");el.className="task"+(done[it.id]?" done":"");
+ el.innerHTML=`<input class="check" type="checkbox" aria-label="কাজ সম্পন্ন" ${done[it.id]?"checked":""}><div><div class="taskname"></div><div class="meta"></div><span class="tag"></span></div><div class="tasktime"></div>`;
+ el.querySelector(".taskname").textContent=it.name;el.querySelector(".meta").textContent=it.desc;el.querySelector(".tag").textContent=it.tag;el.querySelector(".tasktime").textContent=it.time;
+ el.querySelector("input").addEventListener("change",e=>{done[it.id]=e.target.checked;persist();render()});list.appendChild(el)});
+ let n=items.length,c=items.filter(x=>done[x.id]).length,p=n?Math.round(c/n*100):0;
+ document.getElementById("count").textContent=bn(c)+"/"+bn(n);document.getElementById("percent").textContent=bn(p)+"%";document.getElementById("bar").style.width=p+"%";
+ let now=new Date(),m=now.getHours()*60+now.getMinutes(),next=items.filter(x=>!done[x.id]&&timeM(x.time)>=m).sort((a,b)=>timeM(a.time)-timeM(b.time))[0];
+ document.getElementById("next").textContent=next?next.time+" "+next.name:"সব কাজ দেখা হয়েছে";
+ renderEditor();
+}
+function renderEditor(){let ed=document.getElementById("editor");ed.innerHTML="";items.forEach(it=>{let d=document.createElement("div");d.className="edititem";d.innerHTML='<strong></strong><div class="editrow"><div><label>কাজের নাম</label><input class="ename"></div><div><label>সময়</label><input class="etime" type="time"></div></div><label>বিবরণ</label><input class="edesc"><label>ধরন</label><input class="etag">';d.querySelector("strong").textContent=it.name;d.querySelector(".ename").value=it.name;d.querySelector(".etime").value=it.time;d.querySelector(".edesc").value=it.desc;d.querySelector(".etag").value=it.tag;d.dataset.id=it.id;ed.appendChild(d)})}
+document.getElementById("save").onclick=()=>{document.querySelectorAll(".edititem").forEach(d=>{let it=items.find(x=>x.id==d.dataset.id);if(it){it.name=d.querySelector(".ename").value.trim()||it.name;it.time=d.querySelector(".etime").value||it.time;it.desc=d.querySelector(".edesc").value.trim();it.tag=d.querySelector(".etag").value.trim()}});persist();render();toast("রুটিন সেভ হয়েছে")};
+document.getElementById("defaults").onclick=()=>{if(confirm("ডিফল্ট রুটিনে ফিরিয়ে আনবে?")){items=defaults.map((a,i)=>({id:i,name:a[0],time:a[1],desc:a[2],tag:a[3]}));persist();render();toast("ডিফল্ট রুটিন ফিরেছে")}};
+document.getElementById("reset").onclick=()=>{if(confirm("আজকের সব টিক মুছে ফেলবে?")){done={};persist();render();toast("আজকের টিক রিসেট হয়েছে")}};
+function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";setTimeout(()=>t.style.display="none",2600)}
+document.getElementById("notify").onclick=async()=>{if(!("Notification"in window)){toast("এই ব্রাউজারে নোটিফিকেশন সমর্থিত নয়");return}let p=await Notification.requestPermission();if(p==="granted"){toast("অনুমতি হয়েছে। রিমাইন্ডার চালু আছে");schedule()}else toast("নোটিফিকেশন অনুমতি দেওয়া হয়নি")};
+let fired={};
+function schedule(){if(!("Notification"in window)||Notification.permission!=="granted")return;let now=new Date(),m=now.getHours()*60+now.getMinutes();items.forEach(it=>{let key=dayKey()+":"+it.id;if(!done[it.id]&&!fired[key]&&timeM(it.time)===m){new Notification("এখন কী করবে? "+it.name,{body:it.desc});fired[key]=true}})}
+setInterval(()=>{render();schedule()},30000);render();schedule();
+</script>
+</body>
+</html>
